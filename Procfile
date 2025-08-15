@@ -1,0 +1,1 @@
+web: gunicorn snap_flask_backend:app

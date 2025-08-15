@@ -1,203 +1,47 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="https://issp.snapfinance.com/favicon.png">
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Snap Feasibility Tool</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
     body {
-      position: relative;
-      color: #333;
-      padding: 50px 20px;
-      z-index: 1;
-      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      padding: 40px;
+      background-color: #f6f4ef;
+      text-align: center;
     }
-
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: url('https://ui-cms-s3.snapfinance.com/CMS/login/Login_bg_final.png') no-repeat center center fixed;
-      background-size: cover;
-      z-index: -1;
-      opacity: 1;
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #05284c;
-      color: white;
-      padding: 10px 20px;
-      border-bottom: 2px solid #ccc;
-      margin: -50px -20px 40px -20px;
-    }
-
-    header .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    header .logo img {
-      height: 32px;
-    }
-
-    header .greeting {
-      font-size: 14px;
-      text-align: right;
-      line-height: 1.4;
-    }
-
-    h1.title {
-      font-size: 26px;
-      color: #062d4e;
-      margin: 20px 0;
-      text-align: left;
-    }
-
-    #splash {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    #splash img {
-      max-width: 200px;
-      animation: fadeOut 2s ease-in-out 2s forwards;
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-
-    input[type="text"] {
-      width: 100%;
-      max-width: 400px;
-      padding: 12px 15px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 20px;
-    }
-
     button {
       background-color: #1b844a;
-      border: 2px solid #1b844a;
-      color: #fff;
-      padding: 12px 25px;
+      border: none;
+      padding: 12px 24px;
+      color: white;
       font-size: 16px;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
-
-    button:hover {
-      background-color: #166c3d;
-    }
-
-    #result {
-      margin-top: 40px;
-      font-size: 16px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-  @keyframes playloader {
-  0% { background-position: 0 center; }
-  100% { background-position: -960px center; }
-}
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-</style>
+  </style>
 </head>
-<body style="text-align: center;">
-
-  <div id="splash">
-    <div style="text-align: center;">
-      <img src="app-spinner.svg" alt="Loading Spinner" style="width: 96px; height: 96px; display: block; margin: 0 auto; " />
-      <p style="margin-top: 20px; font-size: 18px; color: #05284c; font-weight: 600;">Please hold on</p>
-      <p style="font-size: 14px; color: #05284c;">while we process your information</p>
-    </div>
-  </div>
-
-  <header>
-    <div class="logo">
-      <a href="#" onclick="location.reload();" style="display: inline-block;"><img src="https://developer.snapfinance.com/_next/static/media/logo.54d84ffc.svg" alt="Snap Logo" style="cursor: pointer;"></a>
-      <div class="greeting">
-        Welcome to Snap Feasibility Tool<br>
-        Randall Alvarado B
-      </div>
-    </div>
-  
-<div class="settings-wrapper">
-  <div class="settings-dropdown">
-    <span class="settings-icon" onclick="window.location.href='landing_generator.html';">&#9881;</span>
-  </div>
-</div>
-
-<style>
-  .settings-wrapper {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-  }
-  .settings-dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  .settings-icon {
-    font-size: 22px;
-    cursor: pointer;
-    color: white;
-    padding: 5px;
-  }
-</style>
-</header>
-
-  <h1 class="title" style="font-size: 18px; font-weight: normal; text-align: center;">Enter the merchant URL to check its compatibility with Snap plugins</h1>
-
-  <input type="text" id="merchantUrl" placeholder="Enter Merchant URL" onkeypress="if(event.key === 'Enter'){ checkCompatibility(); }" />
-  <br />
+<body>
+  <h1>Enter the merchant URL to check its compatibility with Snap plugins</h1>
+  <input type="text" id="merchantUrl" placeholder="Enter Merchant URL" />
+  <br /><br />
   <button onclick="checkCompatibility()">Check Compatibility</button>
-
-  <div id="result" style="text-align: center;"></div>
+  <div id="result"></div>
 
   <script>
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        document.getElementById("splash").style.display = "none";
-      }, 4000);
-    });
-
     async function checkCompatibility() {
       let url = document.getElementById('merchantUrl').value.trim();
       const resultDiv = document.getElementById('result');
@@ -230,23 +74,16 @@
         }
 
         resultDiv.innerHTML = `
-          <strong style="color: #1b844a;"><img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Done" style="width: 18px; vertical-align: middle; margin-right: 6px;">Scan Complete</strong><br><br>
-          <div style="line-height: 1.8;">
-          <strong>URL:</strong> ${data.URL}<br>
-          <strong>CMS / Platform:</strong> ${data["CMS / Platform"]}<br>
-          <strong>E-commerce System:</strong> ${data["E-commerce System"]}<br>
-          <strong>Snap Plugin Detected:</strong> ${data["Snap Plugin Detected"]}<br>
-          <strong>Payment Gateways:</strong> ${data["Payment Gateways"].join(', ')}<br>
-          <strong>Third-Party Integrations:</strong> ${data["Third-Party Integrations"].join(', ')}<br>
-          <strong>Detected Plugins / Apps:</strong> ${data["Detected Plugins / Apps"].join(', ')}<br>
-          <strong>Snap Plugin Compatibility:</strong> ${data["Snap Plugin Compatibility"]}<br>
-          
-<strong>Platform Version:</strong> ${data["Platform Version"]}<br>
-<strong>Theme:</strong> ${data["Theme"]}<br>
-<strong>Programming Language:</strong> ${data["Programming Language"]}<br>
-<strong>PHP Version:</strong> ${data["PHP Version"]}<br>
-<strong>Competitors:</strong> ${data["Competitors"].join(', ')}<br>
-<strong>Snap Compatibility Score (%):</strong> ${data["Snap Compatibility Score (%)"]}%
+          <strong style="color: green;">✔ Scan Complete</strong><br><br>
+          <div style="text-align: left;">
+            <strong>URL:</strong> ${data.URL}<br>
+            <strong>CMS / Platform:</strong> ${data["CMS / Platform"]}<br>
+            <strong>Snap Plugin Detected:</strong> ${data["Snap Plugin Detected"]}<br>
+            ${data["Payment Gateways"] && Array.isArray(data["Payment Gateways"]) ? `<strong>Payment Gateways:</strong> ${data["Payment Gateways"].join(", ")}<br>` : ""}
+            ${data["Third-Party Integrations"] && Array.isArray(data["Third-Party Integrations"]) ? `<strong>Third-Party Integrations:</strong> ${data["Third-Party Integrations"].join(", ")}<br>` : ""}
+            ${data["Detected Plugins / Apps"] && Array.isArray(data["Detected Plugins / Apps"]) ? `<strong>Detected Plugins / Apps:</strong> ${data["Detected Plugins / Apps"].join(", ")}<br>` : ""}
+            ${data["Tech Stack"] && Array.isArray(data["Tech Stack"]) ? `<strong>Tech Stack:</strong> ${data["Tech Stack"].join(", ")}<br>` : ""}
+            <strong>Snap Compatibility Score (%):</strong> ${data["Snap Compatibility Score (%)"]}%
           </div>
         `;
       } catch (error) {
@@ -254,6 +91,5 @@
       }
     }
   </script>
-
 </body>
 </html>

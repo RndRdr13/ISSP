@@ -1,95 +1,241 @@
-<!-- index.html -->
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Snap Feasibility Tool</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
+<meta charset="utf-8"/>
+<title>Snap Feasibility Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
-      padding: 40px;
-      background-color: #f6f4ef;
-      text-align: center;
     }
-    #result {
-      margin-top: 30px;
-      padding: 20px;
-      background: white;
-      border-radius: 8px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    body {
+      position: relative;
+      color: #333;
+      padding: 50px 20px;
+      z-index: 1;
+      min-height: 100vh;
     }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: url('https://ui-cms-s3.snapfinance.com/CMS/login/Login_bg_final.png') no-repeat center center fixed;
+      background-size: cover;
+      z-index: -1;
+      opacity: 1;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #05284c;
+      color: white;
+      padding: 10px 20px;
+      border-bottom: 2px solid #ccc;
+      margin: -50px -20px 40px -20px;
+      position: relative;
+    }
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .logo img {
+      height: 32px;
+    }
+    header .greeting {
+      font-size: 14px;
+      text-align: right;
+      line-height: 1.4;
+    }
+    .settings-wrapper {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+    .settings-dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .settings-icon {
+      font-size: 22px;
+      cursor: pointer;
+      color: white;
+      padding: 5px;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #ffffff;
+      min-width: 220px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+      z-index: 9999;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: left;
+      padding: 10px;
+    }
+    .dropdown-content a {
+      color: #05284c;
+      padding: 8px 12px;
+      text-decoration: none;
+      display: block;
+      border-radius: 4px;
+    }
+    .dropdown-content a:hover {
+      background-color: #f3f3f3;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
     button {
       background-color: #1b844a;
-      border: none;
-      padding: 12px 24px;
       color: white;
+      border: none;
+      padding: 12px 25px;
       font-size: 16px;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
+
+    button:hover {
+      background-color: #166c3d;
+    }
+
+    #result {
+      margin-top: 40px;
+      font-size: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .score-green { color: green; }
+    .score-orange { color: orange; }
+    .score-red { color: red; }
   </style>
 </head>
 <body>
-  <h1>Enter the merchant URL to check its compatibility with Snap plugins</h1>
-  <input type="text" id="merchantUrl" placeholder="Enter Merchant URL" />
-  <br /><br />
-  <button onclick="checkCompatibility()">Check Compatibility</button>
-  <div id="result"></div>
+<!-- Splash Screen Loader -->
+<div id="splash">
+<div style="text-align: center;">
+<img alt="Loading Spinner" onerror="this.style.display='none';document.getElementById('fallback').style.display='block';" src="app-spinner.svg" style="width: 96px; height: 96px; display: block; margin: 0 auto;"/>
+<p id="fallback" style="display:none; color:#05284c;">Please wait while loading...</p>
+</div>
+</div>
+<style>
+  #splash {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
 
-  <script>
-    async function checkCompatibility() {
-      let url = document.getElementById('merchantUrl').value.trim();
-      const resultDiv = document.getElementById('result');
-
-      if (!url) {
-        resultDiv.textContent = "Please enter a valid merchant URL.";
-        return;
-      }
-
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-
-      resultDiv.innerHTML = "<em>Scanning...</em>";
-
-      try {
-        const response = await fetch('http://127.0.0.1:5000/analyze', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ url })
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-          resultDiv.innerHTML = `<span style='color: red;'>${data.error}</span>`;
-          return;
-        }
-
-        resultDiv.innerHTML = `
-          <strong style="color: green;">✔ Scan Complete</strong><br><br>
-          <div style="text-align: left;">
-            <strong>URL:</strong> ${data.URL}<br>
-            <strong>CMS / Platform:</strong> ${data["CMS / Platform"]}<br>
-            <strong>Snap Plugin Detected:</strong> ${data["Snap Plugin Detected"]}<br>
-            ${data["Payment Gateways"] && Array.isArray(data["Payment Gateways"]) ? `<strong>Payment Gateways:</strong> ${data["Payment Gateways"].join(", ")}<br>` : ""}
-            ${data["Third-Party Integrations"] && Array.isArray(data["Third-Party Integrations"]) ? `<strong>Third-Party Integrations:</strong> ${data["Third-Party Integrations"].join(", ")}<br>` : ""}
-            ${data["Detected Plugins / Apps"] && Array.isArray(data["Detected Plugins / Apps"]) ? `<strong>Detected Plugins / Apps:</strong> ${data["Detected Plugins / Apps"].join(", ")}<br>` : ""}
-            ${data["Tech Stack"] && Array.isArray(data["Tech Stack"]) ? `<strong>Tech Stack:</strong> ${data["Tech Stack"].join(", ")}<br>` : ""}
-            <strong>Snap Compatibility Score (%):</strong> ${data["Snap Compatibility Score (%)"]}%
-          </div>
-        `;
-      } catch (error) {
-        resultDiv.innerHTML = `<span style='color: red;'>Error: ${error.message}</span>`;
-      }
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
     }
-  </script>
+  }
+</style>
+<script>
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      const splash = document.getElementById("splash");
+      splash.style.animation = "fadeOut 1s ease-in-out forwards";
+    }, 3000);
+  });
+</script>
+
+<header>
+<div class="logo">
+<img alt="Snap Logo" src="https://developer.snapfinance.com/_next/static/media/logo.54d84ffc.svg"/>
+<div class="greeting">
+      Welcome to Snap Feasibility Tool<br/>
+      Randall Alvarado B
+    </div>
+</div>
+<div class="settings-wrapper">
+<div class="settings-dropdown">
+<span class="settings-icon">⚙</span>
+<div class="dropdown-content">
+<a href="landing_generator.html">Merchant links and Landing Page generator</a>
+</div>
+</div>
+</div>
+</header>
+<h2 style="text-align:center;">Enter the merchant URL to check its compatibility with Snap plugins</h2>
+<div style="text-align: center;">
+<input id="merchantUrl" placeholder="Enter merchant URL" type="text"/>
+<br>
+<button onclick="checkCompatibility()">Check Compatibility</button>
+</br></div>
+<div id="result"></div>
+<script>
+  function checkCompatibility() {
+    const urlInput = document.getElementById("merchantUrl").value.trim();
+    const resultDiv = document.getElementById("result");
+    if (!urlInput) {
+      resultDiv.innerHTML = '<span style="color: red">Please enter a URL.</span>';
+      return;
+    }
+
+    fetch("http://127.0.0.1:5000/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: urlInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+      const score = parseInt(data["Snap Compatibility Score (%)"]);
+      let scoreClass = "";
+      if (score === 100) scoreClass = "score-green";
+      else if (score >= 50) scoreClass = "score-orange";
+      else scoreClass = "score-red";
+
+      resultDiv.innerHTML = `
+        <div style="line-height: 1.8; text-align: center;">
+          <strong>URL:</strong> ${data.URL}<br>
+          <strong>CMS / E-Commerce Platform:</strong> ${data["CMS / Platform"]}<br>
+          <strong>Payment Gateways:</strong> ${Array.isArray(data["Payment Gateways"]) ? data["Payment Gateways"].join(', ') : ''}<br>
+          <strong>Theme:</strong> ${data.Theme || "undefined"}<br>
+          <strong>Programming Language:</strong> ${data["Programming Language"]}<br>
+          <strong>PHP Version:</strong> ${data["PHP Version"] || "undefined"}<br>
+          <strong class="${scoreClass}">Snap Compatibility Score (%): ${score}%</strong>
+        </div>
+      `;
+    })
+    .catch(error => {
+      resultDiv.innerHTML = `<span style='color: red;'>Error: ${error.message}</span>`;
+    });
+  }
+</script>
 </body>
 </html>
